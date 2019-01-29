@@ -1,22 +1,54 @@
 description: creates a google cloud platform cloud NAT (if it doesn't exist)
 inputs:
+  async:
+    boolean:
+      default: false
+      description: don't wait for the op to complete
+  autoAllocateNatExternalIps:
+    boolean:
+      default: true
+      description: automatically allocate external IP addresses for Cloud NAT
   description:
     string:
       default: ' '
       description: optional, textual description for the cloud nat
       constraints: {minLength: 1}
+  icmpIdleTimeout:
+    string:
+      default: ' '
+      description: timeout for ICMP connections. See $ gcloud topic datetimes for information on duration formats
+      constraints: {minLength: 1}
   keyFile:
     string:
       description: key file for a GCP service account w/ `Compute Network Admin` role
       isSecret: true
+  minPortsPerVm:
+    number:
+      default: -1
+      description: minimum ports to be allocated to a VM
+      constraints: {format: integer}
   name:
     string:
       description: name of provisioned cloud nat
       constraints: {minLength: 1}
-  network:
+  natExternalIpPool:
     string:
-      description: network to which the cloud nat belongs
-      constraints: {minLength: 1}
+      default: ' '
+      description: comma separated list of external IP Addresses to use for NAT
+  natAllSubnetIpRanges:
+    boolean:
+      default: true
+      description: allow all IP ranges of all subnetworks in the region, including primary and secondary ranges, to use NAT
+  natCustomSubnetIpRanges:
+    string:
+      default: ' '
+      description: "comma separated list of subnetwork primary and secondary IP ranges to be allowed to use NAT.
+        [SUBNETWORK]: including a subnetwork name includes only the primary subnet range of the subnetwork.
+        [SUBNETWORK]:[RANGE_NAME]: specifying a subnetwork and secondary range name includes only that secondary range & not the primary"
+  natPrimarySubnetIpRanges:
+    boolean:
+      default: false
+      description: allow only primary IP ranges of all subnetworks in the region to use NAT
   projectId:
     string:
       description: id of the GCP project containing the cloud nat
@@ -29,21 +61,54 @@ inputs:
     string:
       description: cloud router to use for NAT
       constraints: { minLength: 1 }
-name: github.com/opspec-pkgs/gcp.cloudnat.create
+  tcpEstablishedIdleTimeout:
+    string:
+      default: ' '
+      description: timeout for TCP established connections. See $ gcloud topic datetimes for information on duration formats
+      constraints: {minLength: 1}
+  tcpTransitoryIdleTimeout:
+    string:
+      default: ' '
+      description: Timeout for TCP transitory connections. See $ gcloud topic datetimes for information on duration formats
+      constraints: {minLength: 1}
+  udpIdleTimeout:
+    string:
+      default: ' '
+      description: timeout for ICMP connections. See $ gcloud topic datetimes for information on duration formats
+      constraints: {minLength: 1}
+name: github.com/opspec-pkgs/gcp.compute.routers.nats.create
 opspec: 0.1.6
 run:
-  container:
-    image: { ref: 'google/cloud-sdk:229.0.0-alpine' }
-    files:
-      /cmd.sh:
-      /keyFile: $(keyFile)
-    cmd: [ /cmd.sh ]
-    envVars:
-      CLOUDSDK_COMPUTE_REGION: $(region)
-      description:
-      name:
-      network:
-      projectId:
-      region:
-      router:
+  serial:
+    # ensure service enabled
+    - op:
+        ref: github.com/opspec-pkgs/gcp.services.enable#1.0.0
+        inputs:
+          keyFile:
+          projectId:
+          service: compute.googleapis.com
+    - container:
+        image: { ref: 'google/cloud-sdk:229.0.0-alpine' }
+        files:
+          /cmd.sh:
+          /keyFile: $(keyFile)
+        cmd: [ /cmd.sh ]
+        envVars:
+          async:
+          autoAllocateNatExternalIps:
+          CLOUDSDK_COMPUTE_REGION: $(region)
+          description:
+          icmpIdleTimeout:
+          minPortsPerVm:
+          name:
+          natExternalIpPool:
+          natAllSubnetIpRanges:
+          natCustomSubnetIpRanges:
+          natPrimarySubnetIpRanges:
+          projectId:
+          region:
+          router:
+          tcpEstablishedIdleTimeout:
+          tcpTransitoryIdleTimeout:
+          udpIdleTimeout:
 version: 1.0.0

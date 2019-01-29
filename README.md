@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/opspec-pkgs/gcp.cloudnat.create.svg?branch=master)](https://travis-ci.org/opspec-pkgs/gcp.cloudnat.create)
+[![Build Status](https://travis-ci.org/opspec-pkgs/gcp.compute.routers.nats.create.svg?branch=master)](https://travis-ci.org/opspec-pkgs/gcp.compute.routers.nats.create)
 
 <img src="icon.svg" alt="icon" height="100px">
 
@@ -15,30 +15,40 @@ the op uses [![opspec 0.1.6](https://img.shields.io/badge/opspec-0.1.6-brightgre
 ## Install
 
 ```shell
-opctl op install github.com/opspec-pkgs/gcp.cloudnat.create#1.0.0
+opctl op install github.com/opspec-pkgs/gcp.compute.routers.nats.create#1.0.0
 ```
 
 ## Run
 
 ```
-opctl run github.com/opspec-pkgs/gcp.cloudnat.create#1.0.0
+opctl run github.com/opspec-pkgs/gcp.compute.routers.nats.create#1.0.0
 ```
 
 ## Compose
 
 ```yaml
 op:
-  ref: github.com/opspec-pkgs/gcp.cloudnat.create#1.0.0
+  ref: github.com/opspec-pkgs/gcp.compute.routers.nats.create#1.0.0
   inputs:
     # required
     keyFile:
     name:
-    network:
     projectId:
     region:
     router:
     ### optional; uncomment to override default(s)
+    # async: false
+    # autoAllocateNatExternalIps: true
     # description:  
+    # icmpIdleTimeout:  
+    # minPortsPerVm: -1
+    # natAllSubnetIpRanges: true
+    # natCustomSubnetIpRanges:  
+    # natExternalIpPool:  
+    # natPrimarySubnetIpRanges: false
+    # tcpEstablishedIdleTimeout:  
+    # tcpTransitoryIdleTimeout:  
+    # udpIdleTimeout:  
 ```
 
 # Support
@@ -46,7 +56,7 @@ op:
 join us on
 [![Slack](https://opctl-slackin.herokuapp.com/badge.svg)](https://opctl-slackin.herokuapp.com/)
 or
-[open an issue](https://github.com/opspec-pkgs/gcp.cloudnat.create/issues)
+[open an issue](https://github.com/opspec-pkgs/gcp.compute.routers.nats.create/issues)
 
 # Releases
 
