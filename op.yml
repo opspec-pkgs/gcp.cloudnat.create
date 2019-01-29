@@ -1,0 +1,49 @@
+description: creates a google cloud platform cloud NAT (if it doesn't exist)
+inputs:
+  description:
+    string:
+      default: ' '
+      description: optional, textual description for the cloud nat
+      constraints: {minLength: 1}
+  keyFile:
+    string:
+      description: key file for a GCP service account w/ `Compute Network Admin` role
+      isSecret: true
+  name:
+    string:
+      description: name of provisioned cloud nat
+      constraints: {minLength: 1}
+  network:
+    string:
+      description: network to which the cloud nat belongs
+      constraints: {minLength: 1}
+  projectId:
+    string:
+      description: id of the GCP project containing the cloud nat
+      constraints: {minLength: 1}
+  region:
+    string:
+      description: region of provisioned cloud nat (e.g. us-central1)
+      constraints: { minLength: 1 }
+  router:
+    string:
+      description: cloud router to use for NAT
+      constraints: { minLength: 1 }
+name: github.com/opspec-pkgs/gcp.cloudnat.create
+opspec: 0.1.6
+run:
+  container:
+    image: { ref: 'google/cloud-sdk:229.0.0-alpine' }
+    files:
+      /cmd.sh:
+      /keyFile: $(keyFile)
+    cmd: [ /cmd.sh ]
+    envVars:
+      CLOUDSDK_COMPUTE_REGION: $(region)
+      description:
+      name:
+      network:
+      projectId:
+      region:
+      router:
+version: 1.0.0
